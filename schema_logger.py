@@ -16,7 +16,7 @@ import json
 import re
 
 this_script_path = os.path.dirname( os.path.realpath( __file__ ) )
-os.chdir(this_script_path)
+#os.chdir(this_script_path)
 
 # I nabbed this function from http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 def mkdir_p(path):
@@ -29,11 +29,14 @@ def mkdir_p(path):
         else:
             raise
 
-SQL_DIR = 'sql_files/'
 
-config_json = json.loads(open("config.json").read())
+
+config_json = json.loads(open(this_script_path + "/config.json").read())
 
 DEBUG = config_json.get("DEBUG",'False').lower() in ['t', 'true', 'yes', 'y']
+
+# rstrip('/') + '/' make sure it ends in exactly one /
+SQL_DIR = config_json.get("SQL_DIR", this_script_path + '/sql_files').rstrip('/') + '/'
 
 engine = create_engine('mysql://%s:%s@%s/' %(
                     config_json['username'],
@@ -169,9 +172,9 @@ def dump_and_archive():
             # For now lets just wrap the rsync command instead of re-implementing the wheel.
             # rsync -a --link-dest=$PREV_SBACKUP $SOURCE $NEW_DIR
             rsync_out = sp.check_output("rsync -acvv --no-times --link-dest=%s %s %s" % (
-                                    os.getcwd() + '/' + current_path,
-                                    os.getcwd() + '/' + temp_dump_dir,
-                                    os.getcwd() + '/' + new_dir
+                                    current_path,
+                                    emp_dump_dir,
+                                    new_dir
                                 ),
                            shell = True
                          )

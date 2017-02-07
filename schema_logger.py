@@ -152,18 +152,18 @@ def dump_and_archive():
     #     prev_timestamp = os.readlink(current_path)
 
         diff_prev_to_this = sp.check_output("git diff --no-index %s/ %s/ || TRUE" % (current_path, temp_dump_dir), shell=True)
-        print diff_prev_to_this
+        if DEBUG:
+            print diff_prev_to_this
         if diff_prev_to_this.strip() == '':
             # It's the same as last time.
             # No need to do anything fancy, let's just make this dump a symlink to the last identical dump.
             os.symlink(os.readlink(current_path), './' + new_dir)
-    #         os.remove(current_path)
         else:
             # Now let's use the rsync trick to hardlink our new SQL to the previous SQL.
             # This way any unchanged files just get another hard link to an existing file.
             # This saves a ton of resources as only the files with changes are actually created
             # The cool part is that the new directory acts like it has all the files, because it does!
-            # For now lets just wrap the rsync command
+            # For now lets just wrap the rsync command instead of re-implementing the wheel.
             # rsync -a --link-dest=$PREV_SBACKUP $SOURCE $NEW_DIR
             rsync_out = sp.check_output("rsync -acvv --no-times --link-dest=%s %s %s" % (
                                     os.getcwd() + '/' + current_path,
@@ -174,7 +174,8 @@ def dump_and_archive():
                          )
 
             # rsync will enumerate every file to send.
-            print rsync_out
+            if DEBUG:
+                print rsync_out
 
             # Now let's move current to previous
             # First delete the old 'previous'

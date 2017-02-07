@@ -15,6 +15,9 @@ import shutil
 import json
 import re
 
+this_script_path = os.path.dirname( os.path.realpath( __file__ ) )
+os.chdir(this_script_path)
+
 # I nabbed this function from http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 def mkdir_p(path):
     """ 'mkdir -p' in Python """

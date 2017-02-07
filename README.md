@@ -4,6 +4,11 @@ Make it easy to log the definitions of all your tables, views, and functions.
 Currently this project only works for MySQL.
 I intend to add functionality for Postgres and others in the future.
 
+## Prereqs:
+`brew install rsync git`
+
+`pip install sqlalchemy pandas`
+
 ## Setup:
 Create a json config file in the same directory as the script that has the following fields {"username", "password", "host"}
 

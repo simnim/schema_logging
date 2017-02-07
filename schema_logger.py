@@ -32,7 +32,7 @@ config_json = json.loads(open("config.json").read())
 
 DEBUG = config_json.get("DEBUG",'False').lower() in ['t', 'true', 'yes', 'y']
 
-engine = create_engine('mysql+mysqldb://%s:%s@%s/' %(
+engine = create_engine('mysql://%s:%s@%s/' %(
                     config_json['username'],
                     config_json['password'],
                     config_json['host'],

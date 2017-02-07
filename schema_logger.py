@@ -26,15 +26,16 @@ def mkdir_p(path):
         else:
             raise
 
-DEBUG = True
-
 SQL_DIR = 'sql_files/'
 
-sql_connection_json = json.loads(open("config.json").read())
+config_json = json.loads(open("config.json").read())
+
+DEBUG = config_json.get("DEBUG",'False').lower() in ['t', 'true', 'yes', 'y']
+
 engine = create_engine('mysql+mysqldb://%s:%s@%s/' %(
-                    sql_connection_json['username'],
-                    sql_connection_json['password'],
-                    sql_connection_json['host'],
+                    config_json['username'],
+                    config_json['password'],
+                    config_json['host'],
                 ), pool_recycle=3600)
 
 

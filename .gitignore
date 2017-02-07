@@ -1,3 +1,9 @@
+# We do NOT want to track our config file
+config.json
+
+# The log files live here
+sql_files/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

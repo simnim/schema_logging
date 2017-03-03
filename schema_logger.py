@@ -71,7 +71,11 @@ def get_view_sql(schema, view_name):
 def dump_records_to_temp():
     """ Dumps out the db schemas to a directory and returns the name of said dir """
     timestamp = str(datetime.now()).replace(" ", "__")
-    parent_dir = SQL_DIR + 'temp'
+    base_dump_dir = SQL_DIR + 'temp'
+
+    # First let's clear the temp dir in case it was left behind from a prev run.
+    if os.path.exists(base_dump_dir):
+        shutil.rmtree(base_dump_dir)
 
     # Write out the table object files.
     table_info_df = pd.read_sql_query(
@@ -84,7 +88,7 @@ def dump_records_to_temp():
                      AND TABLE_TYPE = 'BASE TABLE';
                     """, engine)
     for idx, table in table_info_df.iterrows():
-        sql_file_parent = parent_dir + '/tables/' + table['TABLE_SCHEMA']
+        sql_file_parent = base_dump_dir + '/tables/' + table['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
         open(sql_file_parent + '/' + table['TABLE_NAME'] + '.sql', 'w')\
             .write(get_table_sql(table['TABLE_SCHEMA'], table['TABLE_NAME']))
@@ -101,7 +105,7 @@ def dump_records_to_temp():
                     ;
                     """, engine)
     for idx, view in view_info_df.iterrows():
-        sql_file_parent = parent_dir + '/views/' + view['TABLE_SCHEMA']
+        sql_file_parent = base_dump_dir + '/views/' + view['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
         open(sql_file_parent + '/' + view['TABLE_NAME'] + '.sql', 'w')\
             .write(get_view_sql(view['TABLE_SCHEMA'], view['TABLE_NAME']))
@@ -120,7 +124,7 @@ def dump_records_to_temp():
                              'sys');
                     """, engine)
     for idx, function in function_info_df.iterrows():
-        sql_file_parent = parent_dir + '/functions/' + function['ROUTINE_SCHEMA']
+        sql_file_parent = base_dump_dir + '/functions/' + function['ROUTINE_SCHEMA']
         mkdir_p(sql_file_parent)
         open(sql_file_parent + '/' + function['ROUTINE_NAME'] + '.sql', 'w')\
             .write(get_func_sql(function['ROUTINE_SCHEMA'], function['ROUTINE_TYPE'], function['ROUTINE_NAME']))
@@ -173,7 +177,7 @@ def dump_and_archive():
             # rsync -a --link-dest=$PREV_SBACKUP $SOURCE $NEW_DIR
             rsync_out = sp.check_output("rsync -acvv --no-times --link-dest=%s %s %s" % (
                                     current_path,
-                                    emp_dump_dir,
+                                    temp_dump_dir,
                                     new_dir
                                 ),
                            shell = True

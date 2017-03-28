@@ -16,9 +16,8 @@ import json
 import re
 
 this_script_path = os.path.dirname( os.path.realpath( __file__ ) )
-#os.chdir(this_script_path)
 
-# I nabbed this function from http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+# I nabbed this next function from http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 def mkdir_p(path):
     """ 'mkdir -p' in Python """
     try:
@@ -31,7 +30,8 @@ def mkdir_p(path):
 
 
 
-config_json = json.loads(open(this_script_path + "/config.json").read())
+CONFIG_FILE_LOC = os.path.expanduser("~/schema_logger_config.json")
+config_json = json.loads(open(CONFIG_FILE_LOC).read())
 
 DEBUG = config_json.get("DEBUG",'False').lower() in ['t', 'true', 'yes', 'y']
 
@@ -167,7 +167,7 @@ def dump_and_archive():
         if diff_prev_to_this.strip() == '':
             # It's the same as last time.
             # No need to do anything fancy, let's just make this dump a symlink to the last identical dump.
-            os.symlink(os.readlink(current_path), './' + new_dir)
+            os.symlink(os.readlink(current_path), new_dir)
         else:
             # Now let's use the rsync trick to hardlink our new SQL to the previous SQL.
             # This way any unchanged files just get another hard link to an existing file.
@@ -193,7 +193,7 @@ def dump_and_archive():
                 os.remove(prev_path)
             # Move the existing 'current' to 'previous'
             os.rename(current_path, prev_path)
-            os.symlink(timestamp, './' + current_path)
+            os.symlink(timestamp, current_path)
 
         # Either way we want to clear the temp dump
         shutil.rmtree(temp_dump_dir)
@@ -201,7 +201,7 @@ def dump_and_archive():
     else:
         # Move the temp dump dir to the new directory location.
         os.rename(temp_dump_dir, new_dir)
-        os.symlink(timestamp, './' + current_path)
+        os.symlink(timestamp, current_path)
 
 
 if __name__ == "__main__":

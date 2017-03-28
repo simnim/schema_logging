@@ -163,7 +163,7 @@ def dump_and_archive():
     #     Let's pull out the previous one's timestamp
     #     prev_timestamp = os.readlink(current_path)
 
-        diff_prev_to_this = sp.check_output("git diff --no-index %s/ %s/ || TRUE" % (current_path, temp_dump_dir), shell=True)
+        diff_prev_to_this = sp.check_output("git diff --no-index %s/ %s/ || true" % (current_path, temp_dump_dir), shell=True)
         if DEBUG:
             print diff_prev_to_this
         if diff_prev_to_this.strip() == '':

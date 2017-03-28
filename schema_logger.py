@@ -37,6 +37,8 @@ DEBUG = config_json.get("DEBUG",'False').lower() in ['t', 'true', 'yes', 'y']
 
 # rstrip('/') + '/' make sure it ends in exactly one /
 SQL_DIR = config_json.get("SQL_DIR", this_script_path + '/sql_files').rstrip('/') + '/'
+# Just in case the user uses a ~ in their config file
+SQL_DIR = os.path.expanduser(SQL_DIR)
 
 engine = create_engine('mysql://%s:%s@%s/' %(
                     config_json['username'],

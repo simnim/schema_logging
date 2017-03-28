@@ -10,18 +10,19 @@ I intend to add functionality for Postgres and others in the future.
 `pip install sqlalchemy pandas`
 
 ## Setup:
-Create a json config file in the same directory as the script that has the following fields {"username", "password", "host"}
+Create a json config file (named `~/schema_logger_config.json`) in your home directory that has the following fields "username", "password", "host", "SQL_DIR" (optional, it's where we'll put the dumped files)
 
-example file:  (named `config.json`)
+example file:
 ```
 {
   "username": "best_name",
   "password": "Password1",
-  "host": "localhost"
+  "host": "localhost",
+  "SQL_DIR": "~/my_sql_files"
 }
 ```
 
-### Optional, but highly recommended:
+### Highly recommended:
 Add a CRON job that runs this script hourly on your database server.
 
 ## How can this be useful????

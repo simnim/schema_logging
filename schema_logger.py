@@ -133,6 +133,11 @@ def dump_records_to_temp():
 
     # Wrtie out the mat view objects #NOTIMPLEMENTED I don't need this for mysql, just postgres!
 
+    # Write out the database_info tables
+    from dump_database_infos import dump_database_infos
+    json_files_parent_dir = base_dump_dir + '/database_info/'
+    dump_database_infos(json_files_parent_dir, engine)
+
     return timestamp
 
 

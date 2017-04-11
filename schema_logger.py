@@ -40,11 +40,13 @@ SQL_DIR = config_json.get("SQL_DIR", this_script_path + '/sql_files').rstrip('/'
 # Just in case the user uses a ~ in their config file
 SQL_DIR = os.path.expanduser(SQL_DIR)
 
-engine = create_engine('mysql://%s:%s@%s/' %(
-                    config_json['username'],
-                    config_json['password'],
-                    config_json['host'],
-                ), pool_recycle=3600)
+engine = create_engine('mysql://%s:%s@%s/?charset=utf8' %(
+                            config_json['username'],
+                            config_json['password'],
+                            config_json['host'],
+                          )
+                    , pool_recycle=3600
+                )
 
 
 
@@ -92,7 +94,7 @@ def dump_records_to_temp():
     for idx, table in table_info_df.iterrows():
         sql_file_parent = base_dump_dir + '/tables/' + table['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
-        open(sql_file_parent + '/' + table['TABLE_NAME'] + '.sql', 'w')\
+        io.open(sql_file_parent + '/' + table['TABLE_NAME'] + '.sql', 'w', encoding='utf-8')\
             .write(get_table_sql(table['TABLE_SCHEMA'], table['TABLE_NAME']))
 
 
@@ -109,7 +111,7 @@ def dump_records_to_temp():
     for idx, view in view_info_df.iterrows():
         sql_file_parent = base_dump_dir + '/views/' + view['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
-        open(sql_file_parent + '/' + view['TABLE_NAME'] + '.sql', 'w')\
+        io.open(sql_file_parent + '/' + view['TABLE_NAME'] + '.sql', 'w', encoding='utf-8')\
             .write(get_view_sql(view['TABLE_SCHEMA'], view['TABLE_NAME']))
 
 
@@ -128,7 +130,7 @@ def dump_records_to_temp():
     for idx, function in function_info_df.iterrows():
         sql_file_parent = base_dump_dir + '/functions/' + function['ROUTINE_SCHEMA']
         mkdir_p(sql_file_parent)
-        open(sql_file_parent + '/' + function['ROUTINE_NAME'] + '.sql', 'w')\
+        io.open(sql_file_parent + '/' + function['ROUTINE_NAME'] + '.sql', 'w', encoding='utf-8')\
             .write(get_func_sql(function['ROUTINE_SCHEMA'], function['ROUTINE_TYPE'], function['ROUTINE_NAME']))
 
     # Wrtie out the mat view objects #NOTIMPLEMENTED I don't need this for mysql, just postgres!

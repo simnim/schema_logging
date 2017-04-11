@@ -96,7 +96,7 @@ def dump_records_to_temp():
         sql_file_parent = base_dump_dir + '/tables/' + table['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
         io.open(sql_file_parent + '/' + table['TABLE_NAME'] + '.sql', 'w', encoding='utf-8')\
-            .write(get_table_sql(table['TABLE_SCHEMA'], table['TABLE_NAME']))
+            .write(unicode(get_table_sql(table['TABLE_SCHEMA'], table['TABLE_NAME'])))
 
 
     # Write out the view object files
@@ -113,7 +113,7 @@ def dump_records_to_temp():
         sql_file_parent = base_dump_dir + '/views/' + view['TABLE_SCHEMA']
         mkdir_p(sql_file_parent)
         io.open(sql_file_parent + '/' + view['TABLE_NAME'] + '.sql', 'w', encoding='utf-8')\
-            .write(get_view_sql(view['TABLE_SCHEMA'], view['TABLE_NAME']))
+            .write(unicode(get_view_sql(view['TABLE_SCHEMA'], view['TABLE_NAME'])))
 
 
     # Write out the function object files
@@ -132,7 +132,7 @@ def dump_records_to_temp():
         sql_file_parent = base_dump_dir + '/functions/' + function['ROUTINE_SCHEMA']
         mkdir_p(sql_file_parent)
         io.open(sql_file_parent + '/' + function['ROUTINE_NAME'] + '.sql', 'w', encoding='utf-8')\
-            .write(get_func_sql(function['ROUTINE_SCHEMA'], function['ROUTINE_TYPE'], function['ROUTINE_NAME']))
+            .write(unicode(get_func_sql(function['ROUTINE_SCHEMA'], function['ROUTINE_TYPE'], function['ROUTINE_NAME'])))
 
     # Wrtie out the mat view objects #NOTIMPLEMENTED I don't need this for mysql, just postgres!
 

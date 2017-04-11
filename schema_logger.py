@@ -14,6 +14,7 @@ import subprocess as sp
 import shutil
 import json
 import re
+import io
 
 this_script_path = os.path.dirname( os.path.realpath( __file__ ) )
 
